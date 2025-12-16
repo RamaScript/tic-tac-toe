@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe</title>
+
+    <style>
+      body {
+        text-align: center;
+        font-family: Arial;
+        background: #222;
+        color: #fff;
+      }
+
+      .board {
+        width: 300px;
+        height: 300px;
+        margin: 20px auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+      }
+
+      .cell {
+        width: 100px;
+        height: 100px;
+        background: #444;
+        font-size: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cell:hover {
+        background: #555;
+      }
+
+      .restart {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #444;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: all 0.2s;
+      }
+      .restart:hover {
+        background: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Tic Tac Toe</h1>
+
+    <div class="board">
+      <div class="cell" id="0"></div>
+      <div class="cell" id="1"></div>
+      <div class="cell" id="2"></div>
+      <div class="cell" id="3"></div>
+      <div class="cell" id="4"></div>
+      <div class="cell" id="5"></div>
+      <div class="cell" id="6"></div>
+      <div class="cell" id="7"></div>
+      <div class="cell" id="8"></div>
+    </div>
+
+    <h2 class="msg">Player X's Turn</h2>
+
+    <button class="restart">Restart</button>
+
+    <script>
+      let board = ["", "", "", "", "", "", "", "", ""];
+      let currentPlayer = "X";
+      let gameOver = false;
+
+      let winPatterns = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      let cells = document.querySelectorAll(".cell");
+      let msg = document.querySelector(".msg");
+      let restartBtn = document.querySelector(".restart");
+
+      cells.forEach((cell) => {
+        cell.addEventListener("click", () => {
+          handleClick(cell);
+        });
+      });
+
+      function handleClick(cell) {
+        if (gameOver) return;
+        let index = cell.id;
+        if (board[index] !== "") return;
+
+        board[index] = currentPlayer;
+        cell.innerText = currentPlayer;
+        switchPlayer();
+        checkWinner();
+        cheackDraw();
+      }
+
+      function cheackDraw() {
+        if (board.every((cell) => cell !== "") && !gameOver) {
+          msg.innerText = "It's a Draw!";
+          msg.style.color = "yellow";
+          setTimeout(() => {
+            msg.style.color = "white";
+            resetGame();
+          }, 2000);
+          gameOver = true;
+        }
+      }
+
+      function switchPlayer() {
+        if (currentPlayer === "X") {
+          currentPlayer = "O";
+        } else {
+          currentPlayer = "X";
+        }
+        msg.innerText = `Player ${currentPlayer}'s turn`;
+      }
+
+      function checkWinner() {
+        for (let pattern of winPatterns) {
+          const [a, b, c] = pattern;
+
+          if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            msg.innerText = `Player ${board[a]} Wins!`;
+            msg.style.color = "lightgreen";
+            console.log("game iverzkjsc");
+            setTimeout(() => {
+              msg.style.color = "white";
+              resetGame();
+            }, 2000);
+            gameOver = true;
+
+            return;
+          }
+        }
+      }
+
+      restartBtn.addEventListener("click", resetGame);
+
+      function resetGame() {
+        board = ["", "", "", "", "", "", "", "", ""];
+        gameOver = false;
+        currentPlayer = "X";
+        msg.innerText = `Player ${currentPlayer}'s turn`;
+        cells.forEach((cell) => {
+          cell.innerText = "";
+        });
+      }
+    </script>
+  </body>
+</html>
